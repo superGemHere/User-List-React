@@ -1,5 +1,6 @@
 export default function CreateUserModal ({
-    closeCreateModal
+    closeCreateModal,
+    onCreateUser
 }) {
 
 
@@ -19,7 +20,7 @@ export default function CreateUserModal ({
               </svg>
             </button>
           </header>
-          <form>
+          <form onSubmit={onCreateUser}>
             <div className="form-row">
               <div className="form-group">
                 <label htmlFor="firstName">First name</label>

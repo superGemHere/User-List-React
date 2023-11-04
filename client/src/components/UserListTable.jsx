@@ -10,6 +10,7 @@ export default function UserListTable(){
     useEffect( () => {
         userService.getAll()
         .then( result => setUsers(result))
+        .catch( err => console.log(err))
     }, []);
 
     const createUserClickHandler = () =>{
@@ -18,12 +19,29 @@ export default function UserListTable(){
     const closeCreateModal = () => {
         setShowCreate(false);
     }
+    const userCreateHandler = async (e) => {
+        e.preventDefault()
+
+        
+        const formData = new FormData(e.currentTarget)
+        const data = Object.fromEntries(formData)
+        
+        const newUser = await userService.createUser(data);
+
+        setUsers(state => [...state, newUser])
+
+        
+        setShowCreate(false);
+        console.log(data)
+    }
 
     return (
         <div className="table-wrapper">
-            {showCreate && <CreateUserModal 
+            {showCreate && (<CreateUserModal 
             closeCreateModal = {closeCreateModal}
-            />}
+            onCreateUser = {userCreateHandler}
+            />
+            )}
 
 
         <table className="table">
@@ -83,7 +101,7 @@ export default function UserListTable(){
           </thead>
           <tbody>
             {/* <!-- Table row component --> */}
-          {users.map(user => (
+          {users.map(user =>  (
             <UserItem 
                key = {user._id}
                 {...user}
