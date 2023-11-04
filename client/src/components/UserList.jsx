@@ -7,6 +7,7 @@ export default function UserList() {
             <Search />
 
             <UserListTable />
+
         </section>
     );
 }
