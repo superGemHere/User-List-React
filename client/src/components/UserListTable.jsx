@@ -2,10 +2,13 @@ import UserItem from "./UserItem";
 import { useEffect, useState } from "react";
 import * as userService from "../services/userService";
 import CreateUserModal from "./CreateUserModal";
+import UserInfoModal from "./UserInfoModal";
 
 export default function UserListTable(){
     const [users, setUsers] = useState([]);
-    const [showCreate, setShowCreate] = useState(false)
+    const [showCreate, setShowCreate] = useState(false);
+    const [showUserInfo, setShowUserInfo] = useState(false);
+    const [selectedUserId, setSelectedUserId] = useState(null);
 
     useEffect( () => {
         userService.getAll()
@@ -20,11 +23,9 @@ export default function UserListTable(){
         setShowCreate(false);
     }
     const userCreateHandler = async (e) => {
-        e.preventDefault()
+        e.preventDefault();
 
-        
-        const formData = new FormData(e.currentTarget)
-        const data = Object.fromEntries(formData)
+        const data = Object.fromEntries(new FormData(e.currentTarget));
         
         const newUser = await userService.createUser(data);
 
@@ -33,8 +34,12 @@ export default function UserListTable(){
         
         setShowCreate(false);
         console.log(data)
+        console.log(users)
     }
-
+    const showUserInfoHandler = async(userId) =>{
+      setSelectedUserId(userId)
+      setShowUserInfo(true)
+    }
     return (
         <div className="table-wrapper">
             {showCreate && (<CreateUserModal 
@@ -43,7 +48,10 @@ export default function UserListTable(){
             />
             )}
 
-
+            {showUserInfo && <UserInfoModal 
+            onClose={() => setShowUserInfo(false)} 
+            userId = {selectedUserId} 
+            />}
         <table className="table">
           <thead>
             <tr>
@@ -103,8 +111,11 @@ export default function UserListTable(){
             {/* <!-- Table row component --> */}
           {users.map(user =>  (
             <UserItem 
-               key = {user._id}
+               key = {user?._id}
+               userId = {user._id}
                 {...user}
+               onDetailsClick = {showUserInfoHandler}
+
             />
           ))}
           </tbody>
