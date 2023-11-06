@@ -20,8 +20,8 @@ export const createUser = async (data) => {
         email: data.email,
         imageUrl: data.imageUrl,
         phoneNumber: data.phoneNumber,
-        createdAt: new Date().toISOString,
-        updatedAt: new Date().toISOString,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
         address: {
             coutry: data.coutry,
             city: data.city,
@@ -41,5 +41,19 @@ export const createUser = async (data) => {
     const response = await fetch(baseUrl, options);
 
     const result = await response.json();
-    console.log(result)
+    console.log(result);
+
+    return result;
+}
+
+export const getOne = async(userId) => {
+    const userUrl = `${baseUrl}/${userId}`;
+    console.log(userUrl)
+
+   const response =  await fetch(userUrl);
+   const result = await response.json()
+   console.log(result)
+   return result;
+
+
 }
