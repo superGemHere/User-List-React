@@ -3,11 +3,13 @@ import { useEffect, useState } from "react";
 import * as userService from "../services/userService";
 import CreateUserModal from "./CreateUserModal";
 import UserInfoModal from "./UserInfoModal";
+import UserDeleteModal from "./UserDeleteModal";
 
 export default function UserListTable(){
     const [users, setUsers] = useState([]);
     const [showCreate, setShowCreate] = useState(false);
     const [showUserInfo, setShowUserInfo] = useState(false);
+    const [showDelete, setShowDelete] = useState(false);
     const [selectedUserId, setSelectedUserId] = useState(null);
 
     useEffect( () => {
@@ -40,6 +42,17 @@ export default function UserListTable(){
       setSelectedUserId(userId)
       setShowUserInfo(true)
     }
+    const deleteUserClickHandler = async(userId) =>{
+      setSelectedUserId(userId)
+      setShowDelete(true);
+    }
+    const deleteUserHandler = async() =>{
+      const result = await userService.deleteOne(selectedUserId);
+
+      setUsers(state => state.filter(user => user._id !== selectedUserId))
+
+      setShowDelete(false)
+    }
     return (
         <div className="table-wrapper">
             {showCreate && (<CreateUserModal 
@@ -52,6 +65,12 @@ export default function UserListTable(){
             onClose={() => setShowUserInfo(false)} 
             userId = {selectedUserId} 
             />}
+
+            {showDelete && <UserDeleteModal
+            onClose={() => setShowDelete(false)}  
+            onDelete = {deleteUserHandler}
+            />
+            }
         <table className="table">
           <thead>
             <tr>
@@ -115,6 +134,7 @@ export default function UserListTable(){
                userId = {user._id}
                 {...user}
                onDetailsClick = {showUserInfoHandler}
+               onDeleteClick = {deleteUserClickHandler}
 
             />
           ))}
