@@ -48,11 +48,11 @@ export const createUser = async (data) => {
 
 export const getOne = async(userId) => {
     const userUrl = `${baseUrl}/${userId}`;
-    console.log(userUrl)
+    // console.log(userUrl)
 
    const response =  await fetch(userUrl);
    const result = await response.json();
-   console.log(result)
+//    console.log(result)
    return result;
 
 
@@ -62,6 +62,18 @@ export const deleteOne = async(userId) => {
     const response = await fetch(`${baseUrl}/${userId}`, {
         method: 'DELETE'
     })
+
+    const result = await response.json();
+
+    return result;
+}
+
+export const updateOne = async(userId, updatedBody) => {
+    const response = await fetch(`${baseUrl}/${userId}`, {
+        method: 'PUT',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(updatedBody)
+    });
 
     const result = await response.json();
 
