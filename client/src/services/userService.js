@@ -51,7 +51,7 @@ export const getOne = async(userId) => {
     console.log(userUrl)
 
    const response =  await fetch(userUrl);
-   const result = await response.json()
+   const result = await response.json();
    console.log(result)
    return result;
 
