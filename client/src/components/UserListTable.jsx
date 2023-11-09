@@ -5,10 +5,12 @@ import CreateUserModal from "./CreateUserModal";
 import UserInfoModal from "./UserInfoModal";
 import UserDeleteModal from "./UserDeleteModal";
 import Spinner from "./Spinner";
+import EditUserModal from "./EditUserModal";
 
 export default function UserListTable(){
     const [users, setUsers] = useState([]);
     const [showCreate, setShowCreate] = useState(false);
+    const [showEdit, setShowEdit] = useState(false);
     const [isLoading, setisLoading] = useState(false);
     const [showUserInfo, setShowUserInfo] = useState(false);
     const [showDelete, setShowDelete] = useState(false);
@@ -43,10 +45,17 @@ export default function UserListTable(){
         console.log(data)
         console.log(users)
     }
+
+    const editUserClickHandler = async(userId) =>{
+      setSelectedUserId(userId)
+      setShowEdit(true);
+    }
+
     const showUserInfoHandler = async(userId) =>{
       setSelectedUserId(userId)
       setShowUserInfo(true)
     }
+
     const deleteUserClickHandler = async(userId) =>{
       setSelectedUserId(userId)
       setShowDelete(true);
@@ -65,6 +74,17 @@ export default function UserListTable(){
             onCreateUser = {userCreateHandler}
             />
             )}
+
+            {showEdit && <EditUserModal 
+            closeEditModal = {() => setShowEdit(false)}
+            userId = {selectedUserId}
+            users = {setUsers}
+            // onEditUser = {(e) => {
+            //     e.preventDefault()
+            //   console.log('submit')
+            // }
+            // }
+            />}
 
             {showUserInfo && <UserInfoModal 
             onClose={() => setShowUserInfo(false)} 
@@ -145,6 +165,7 @@ export default function UserListTable(){
                 {...user}
                onDetailsClick = {showUserInfoHandler}
                onDeleteClick = {deleteUserClickHandler}
+               onEditClick = {editUserClickHandler}
 
             />
           ))}
