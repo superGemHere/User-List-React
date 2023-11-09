@@ -18,11 +18,12 @@ export default function UserListTable(){
 
     useEffect( () => {
         setisLoading(true)
-
+          console.log('asd')
         userService.getAll()
         .then( result => setUsers(result))
         .catch( err => console.log(err))
         .finally(() => setisLoading(false))
+
     }, []);
 
     const createUserClickHandler = () =>{
@@ -78,12 +79,8 @@ export default function UserListTable(){
             {showEdit && <EditUserModal 
             closeEditModal = {() => setShowEdit(false)}
             userId = {selectedUserId}
-            users = {setUsers}
-            // onEditUser = {(e) => {
-            //     e.preventDefault()
-            //   console.log('submit')
-            // }
-            // }
+            setUsers = {setUsers}
+
             />}
 
             {showUserInfo && <UserInfoModal 
@@ -157,7 +154,6 @@ export default function UserListTable(){
             </tr>
           </thead>
           <tbody>
-            {/* <!-- Table row component --> */}
           {users.map(user =>  (
             <UserItem 
                key = {user?._id}

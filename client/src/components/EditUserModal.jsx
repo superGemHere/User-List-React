@@ -19,7 +19,6 @@ const CHANGE_KEYS = {
 export default function EditUserModal({
     userId,
     closeEditModal,
-    // onEditUser,
     setUsers
 }){
     const [userDetails, setUserDetails] = useState({});
@@ -33,14 +32,30 @@ export default function EditUserModal({
     const onChangeHandler = (e) => {
         console.log(e.target.name)
         console.log(e.target.value)
+
+        const nameAttribute = e.target.name;
+
+      if(e.target.name === 'country' || e.target.name === 'city' || e.target.name === 'street' || e.target.name === 'streetNumber'){
+
+        setUserDetails(state => ({
+          ...state,
+          address: {
+            ...state.address,
+            [nameAttribute] : e.target.value
+
+          }
+        }))
+      }else{
+
         setUserDetails(state => ({
             ...state,
             [e.target.name]: e.target.value,
+            
         }))
+      }
     }
     
     useEffect(() => {
-        // console.log(userId)
         userService.getOne(userId)
         .then(result => setUserDetails(result))
     }, [userId])
@@ -54,14 +69,17 @@ export default function EditUserModal({
         console.log(userDetails)
 
         setUsers(state => {
-            let prevState = state.filter(prevUser => prevUser !== userDetails);
-            return [...prevState, userDetails]
-        })
-        // const result = await updated.json();
-    
-        // console.log(result);
-    }
-    
+
+        return state.map((item) => {
+          if(item._id === userId){
+                 item = updated;
+             } 
+                return item;
+         })
+        });
+
+        closeEditModal();
+        }
 
     return (
         <div className="overlay">
@@ -92,7 +110,7 @@ export default function EditUserModal({
                 <label htmlFor="lastName">Last name</label>
                 <div className="input-wrapper">
                   <span><i className="fa-solid fa-user"></i></span>
-                  <input id="lastName" name="lastName" type="text" defaultValue={userDetails.lastName}/>
+                  <input id="lastName" name="lastName" type="text" defaultValue={userDetails.lastName} onChange={onChangeHandler}/>
                 </div>
               </div>
             </div>
@@ -102,14 +120,14 @@ export default function EditUserModal({
                 <label htmlFor="email">Email</label>
                 <div className="input-wrapper">
                   <span><i className="fa-solid fa-envelope"></i></span>
-                  <input id="email" name="email" type="text" defaultValue={userDetails.email}/>
+                  <input id="email" name="email" type="text" defaultValue={userDetails.email} onChange={onChangeHandler}/>
                 </div>
               </div>
               <div className="form-group">
                 <label htmlFor="phoneNumber">Phone Number</label>
                 <div className="input-wrapper">
                   <span><i className="fa-solid fa-phone"></i></span>
-                  <input id="phoneNumber" name="phoneNumber" type="text" defaultValue={userDetails.phoneNumber}/>
+                  <input id="phoneNumber" name="phoneNumber" type="text" defaultValue={userDetails.phoneNumber} onChange={onChangeHandler}/>
                 </div>
               </div>
             </div>
@@ -118,7 +136,7 @@ export default function EditUserModal({
               <label htmlFor="imageUrl">Image Url</label>
               <div className="input-wrapper">
                 <span><i className="fa-solid fa-image"></i></span>
-                <input id="imageUrl" name="imageUrl" type="text" defaultValue={userDetails.imageUrl}/>
+                <input id="imageUrl" name="imageUrl" type="text" defaultValue={userDetails.imageUrl} onChange={onChangeHandler}/>
               </div>
             </div>
 
@@ -127,14 +145,14 @@ export default function EditUserModal({
                 <label htmlFor="country">Country</label>
                 <div className="input-wrapper">
                   <span><i className="fa-solid fa-map"></i></span>
-                  <input id="country" name="country" type="text" defaultValue={userDetails.address?.country}/>
+                  <input id="country" name="country" type="text" defaultValue={userDetails.address?.country} onChange={onChangeHandler}/>
                 </div>
               </div>
               <div className="form-group">
                 <label htmlFor="city">City</label>
                 <div className="input-wrapper">
                   <span><i className="fa-solid fa-city"></i></span>
-                  <input id="city" name="city" type="text" defaultValue={userDetails.address?.city}/>
+                  <input id="city" name="city" type="text" defaultValue={userDetails.address?.city} onChange={onChangeHandler}/>
                 </div>
               </div>
             </div>
@@ -144,14 +162,14 @@ export default function EditUserModal({
                 <label htmlFor="street"></label>
                 <div className="input-wrapper">
                   <span><i className="fa-solid fa-map">Street</i></span>
-                  <input id="street" name="street" type="text" defaultValue={userDetails.address?.street}/>
+                  <input id="street" name="street" type="text" defaultValue={userDetails.address?.street} onChange={onChangeHandler}/>
                 </div>
               </div>
               <div className="form-group">
                 <label htmlFor="streetNumber">Street Number</label>
                 <div className="input-wrapper">
                   <span><i className="fa-solid fa-house-chimney"></i></span>
-                  <input id="streetNumber" name="streetNumber" type="text" defaultValue={userDetails.address?.streetNumber}/>
+                  <input id="streetNumber" name="streetNumber" type="text" defaultValue={userDetails.address?.streetNumber} onChange={onChangeHandler}/>
                 </div>
               </div>
             </div>
