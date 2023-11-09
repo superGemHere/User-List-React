@@ -2,27 +2,64 @@ import { useState, useEffect } from "react";
 import * as userService from '../services/userService'
 
 
+const CHANGE_KEYS = {
+    firstName: 'firstName',
+    lastName: 'lastName',
+    email: 'email',
+    phoneNumber: 'phoneNumber',
+    imageUrl: 'imageUrl',
+    country: 'country',
+    city: 'city',
+    street: 'street',
+    streetNumber: 'streetNumber'
+};
+
+
 
 export default function EditUserModal({
     userId,
     closeEditModal,
-    onEditUser,
+    // onEditUser,
+    setUsers
 }){
     const [userDetails, setUserDetails] = useState({});
+
+    
+    
+
+    
+    
+
+    const onChangeHandler = (e) => {
+        console.log(e.target.name)
+        console.log(e.target.value)
+        setUserDetails(state => ({
+            ...state,
+            [e.target.name]: e.target.value,
+        }))
+    }
     
     useEffect(() => {
-        console.log(userId)
+        // console.log(userId)
         userService.getOne(userId)
         .then(result => setUserDetails(result))
     }, [userId])
 
-    const onSubmit = async(e, userId, updatedBody) => {
+    
+
+    const onSubmit = async(e) => {
         e.preventDefault();
     
-        const updated = await userService.updateOne(userId, updatedBody)
-        const result = await updated.json();
+        const updated = await userService.updateOne(userId, userDetails)
+        console.log(userDetails)
+
+        setUsers(state => {
+            let prevState = state.filter(prevUser => prevUser !== userDetails);
+            return [...prevState, userDetails]
+        })
+        // const result = await updated.json();
     
-        console.log(result);
+        // console.log(result);
     }
     
 
@@ -42,13 +79,13 @@ export default function EditUserModal({
               </svg>
             </button>
           </header>
-          <form onSubmit={onEditUser}>
+          <form onSubmit={onSubmit}>
             <div className="form-row">
               <div className="form-group">
                 <label htmlFor="firstName">First name</label>
                 <div className="input-wrapper">
                   <span><i className="fa-solid fa-user"></i></span>
-                  <input id="firstName" name="firstName" type="text" defaultValue={userDetails.firstName}/>
+                  <input id="firstName" name="firstName" type="text" defaultValue={userDetails.firstName} onChange={onChangeHandler}/>
                 </div>
               </div>
               <div className="form-group">
